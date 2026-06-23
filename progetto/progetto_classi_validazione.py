@@ -5,3 +5,6 @@ class ProdottoIn(BaseModel):
     nome: str
     prezzo: float
     
+class UtenteAuth(BaseModel):
+    username: str
+    password: str
