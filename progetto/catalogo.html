@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineManiaci - Catalogo Locale</title>
+</head>
+<body style="font-family: sans-serif; max-width: 900px; margin: 30px auto; padding: 20px; line-height: 1.5;">
+
+    <h1>🎬 CineManiaci - Cerca Film</h1>
+    <p>Cerca i titoli archiviati all'interno del database locale della piattaforma.</p>
+    
+    <div style="margin-bottom: 30px; background: #f1f5f9; padding: 15px; border-radius: 6px;">
+        <input type="text" id="campoCerca" placeholder="Scrivi una parte del titolo (es. Matrix)..." style="padding: 8px; width: 300px; font-size: 14px;">
+        <button onclick="avviaRicerca()" style="padding: 8px 15px; font-size: 14px; cursor: pointer;">Cerca</button>
+    </div>
+
+    <h2>Risultati della Ricerca</h2>
+    <div id="risultati" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
+        </div>
+
+    <hr>
+    <div id="schedaFilm" style="display: none; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 25px; border-radius: 8px;">
+        <h2 id="schedaTitolo" style="color: #16a34a; margin-top: 0;"></h2>
+        <p><b>Anno di Uscita:</b> <span id="schedaAnno"></span></p>
+        <p><b>Trama del Film:</b></p>
+        <p id="schedaTrama" style="font-style: italic; color: #374151;"></p>
+    </div>
+
+    <script>
+        const API_URL = "https://URL_DEL_TUO_SITO";
+
+        // ESERCITAZIONE 3: Algoritmo JavaScript per generare il catalogo (Slide 8)
+        async function avviaRicerca() {
+            
+            // 1. Leggo il testo ricercato dall'utente (Slide 8)
+            const valoreRicerca = document.getElementById("campoCerca").value;
+            const contenitore = document.getElementById("risultati");
+
+            // 2. Pulisco i vecchi risultati (Slide 8)
+            contenitore.innerHTML = "";
+
+            try {
+                // 3. Effettuo la chiamata a /film/cerca?keyword= passandogli il parametro Query (Slide 8)
+                const risposta = await fetch(`${API_URL}/film/cerca?keyword=${valoreRicerca}`);
+                
+                // 4. Controllo se i risultati sono zero / errore, in quel caso scrivo un errore (Slide 8)
+                if (!risposta.ok) {
+                    contenitore.innerHTML = "<p style='color: red;'>Nessun film trovato con questo criterio di ricerca.</p>";
+                    return;
+                }
+
+                const filmTrovati = await risposta.json();
+
+                // 5. Ciclo l'array dei film arrivati dal Back-end (Slide 8)
+                filmTrovati.forEach(film => {
+                    
+                    // 6. Per ogni risultato mi preparo il testo e la Card da scrivere (Slide 8)
+                    const cardHTML = `
+                        <div style="border: 1px solid #cbd5e1; padding: 15px; border-radius: 6px; text-align: center; background: #fff;">
+                            <img src="${film.url_locandina}" alt="${film.titolo}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">
+                            <h3 style="margin: 10px 0 5px 0; font-size: 16px;">${film.titolo}</h3>
+                            <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Anno: ${film.anno}</p>
+                            <button onclick="apriScheda(${film.id})" style="padding: 6px 12px; font-size: 13px; cursor: pointer;">Vedi Scheda</button>
+                        </div>
+                    `;
+                    
+                    // 7. Lo aggiungo all'innerHTML del mio contenitore di risultati (Slide 8)
+                    contenitore.innerHTML += cardHTML;
+                });
+
+            } catch (errore) {
+                console.error("Errore durante la fetch:", errore);
+                contenitore.innerHTML = "<p style='color: red;'>Errore di comunicazione con il server principale.</p>";
+            }
+        }
+
+        // ESERCITAZIONE 4: Funzione lasciata vuota per lo step successivo (Slide 11)
+        async function apriScheda(idFilm) {
+            // Verrà implementata nel prossimo esercizio
+        }
+    </script>
+</body>
+</html>
