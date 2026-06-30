@@ -20,6 +20,7 @@
         </div>
 
     <hr>
+    
     <div id="schedaFilm" style="display: none; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 25px; border-radius: 8px;">
         <h2 id="schedaTitolo" style="color: #16a34a; margin-top: 0;"></h2>
         <p><b>Anno di Uscita:</b> <span id="schedaAnno"></span></p>
@@ -30,21 +31,21 @@
     <script>
         const API_URL = "https://cautious-space-robot-p7j66g74q74gc94v5-8000.app.github.dev";
 
-        // ESERCITAZIONE 3: Algoritmo JavaScript per generare il catalogo (Slide 8)
+        // ESERCITAZIONE 3: Algoritmo JavaScript per generare il catalogo
         async function avviaRicerca() {
             
-            // 1. Leggo il testo ricercato dall'utente (Slide 8)
+            // 1. Leggo il testo ricercato dall'utente
             const valoreRicerca = document.getElementById("campoCerca").value;
             const contenitore = document.getElementById("risultati");
 
-            // 2. Pulisco i vecchi risultati (Slide 8)
+            // 2. Pulisco i vecchi risultati dallo schermo
             contenitore.innerHTML = "";
 
             try {
-                // 3. Effettuo la chiamata a /film/cerca?keyword= passandogli il parametro Query (Slide 8)
+                // 3. Effettuo la chiamata al Back-end passandogli il parametro Query
                 const risposta = await fetch(`${API_URL}/film/cerca?keyword=${valoreRicerca}`);
                 
-                // 4. Controllo se i risultati sono zero / errore, in quel caso scrivo un errore (Slide 8)
+                // 4. Controllo se i risultati sono vuoti o se c'è un errore, in quel caso mostro un messaggio
                 if (!risposta.ok) {
                     contenitore.innerHTML = "<p style='color: red;'>Nessun film trovato con questo criterio di ricerca.</p>";
                     return;
@@ -52,10 +53,10 @@
 
                 const filmTrovati = await risposta.json();
 
-                // 5. Ciclo l'array dei film arrivati dal Back-end (Slide 8)
+                // 5. Ciclo l'array dei film arrivati dal server
                 filmTrovati.forEach(film => {
                     
-                    // 6. Per ogni risultato mi preparo il testo e la Card da scrivere (Slide 8)
+                    // 6. Per ogni risultato mi preparo la struttura della Card con i dati del film
                     const cardHTML = `
                         <div style="border: 1px solid #cbd5e1; padding: 15px; border-radius: 6px; text-align: center; background: #fff;">
                             <img src="${film.url_locandina}" alt="${film.titolo}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">
@@ -65,7 +66,7 @@
                         </div>
                     `;
                     
-                    // 7. Lo aggiungo all'innerHTML del mio contenitore di risultati (Slide 8)
+                    // 7. Aggiungo la Card appena creata all'interno del contenitore visibile
                     contenitore.innerHTML += cardHTML;
                 });
 
@@ -75,9 +76,32 @@
             }
         }
 
-        // ESERCITAZIONE 4: Funzione lasciata vuota per lo step successivo (Slide 11)
+        // ESERCITAZIONE 4: Sbloccare la Scheda Tecnica
         async function apriScheda(idFilm) {
-            // Verrà implementata nel prossimo esercizio
+            try {
+                // 1. Invio la richiesta alla rotta di dettaglio passando l'ID come Path Parameter
+                const risposta = await fetch(`${API_URL}/film/${idFilm}`);
+                
+                // 2. Controllo se la comunicazione con il server è andata a buon fine
+                if (!risposta.ok) {
+                    alert("Impossibile recuperare i dettagli di questo film.");
+                    return;
+                }
+
+                const film = await risposta.json();
+
+                // 3. Inserisco i dati del singolo film recuperato nei rispettivi elementi HTML
+                document.getElementById("schedaTitolo").innerText = film.titolo;
+                document.getElementById("schedaAnno").innerText = film.anno;
+                document.getElementById("schedaTrama").innerText = film.trama;
+
+                // 4. Rendo visibile il blocco della scheda tecnica modificando lo stile CSS (rimuovo il display: none)
+                document.getElementById("schedaFilm").style.display = "block";
+
+            } catch (errore) {
+                console.error("Errore durante il recupero della scheda tecnica:", errore);
+                alert("Errore di connessione durante il recupero dei dettagli del film.");
+            }
         }
     </script>
 </body>
