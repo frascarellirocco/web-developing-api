@@ -59,7 +59,7 @@
                     // 6. Per ogni risultato mi preparo la struttura della Card con i dati del film
                     const cardHTML = `
                         <div style="border: 1px solid #cbd5e1; padding: 15px; border-radius: 6px; text-align: center; background: #fff;">
-                            <img src="${film.url_locandina}" alt="${film.titolo}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">
+                            <img src="${film.url_locandina}" alt="${film.titolo}" referrerpolicy="no-referrer" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;" />
                             <h3 style="margin: 10px 0 5px 0; font-size: 16px;">${film.titolo}</h3>
                             <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Anno: ${film.anno}</p>
                             <button onclick="apriScheda(${film.id})" style="padding: 6px 12px; font-size: 13px; cursor: pointer;">Vedi Scheda</button>

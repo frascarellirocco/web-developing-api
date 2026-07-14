@@ -98,11 +98,10 @@ if cursor.fetchone()[0] == 0:
         ("Parasite", "L'avidità e la discriminazione di classe minacciano il neonato rapporto simbiotico tra la ricca famiglia Park e la famiglia Kim, decisamente meno abbiente.", 2019, "https://www.themoviedb.org/t/p/w600_and_h900_face/mMM8kcfspicib7AmPTvf97Rarwn.jpg", "496243"),
         ("Il Signore degli Anelli: La Compagnia dell'Anello", "Un timido Hobbit della Contea e otto compagni intraprendono un viaggio per distruggere il potente Unico Anello e salvare la Terra di Mezzo dal Signore Oscuro Sauron.", 2001, "https://www.themoviedb.org/t/p/w600_and_h900_face/iZTDPQYgr3rhL7hPIYFt17ATp8.jpg", "120"),
         ("Star Wars: Una Nuova Speranza", "Luke Skywalker unisce le forze con un cavaliere Jedi, un pilota arrogante, un Wookiee e due droidi per salvare la galassia dall'arma di distruzione di massa dell'Impero, salvando la principessa Leia.", 1977, "https://www.themoviedb.org/t/p/w600_and_h900_face/aWq0skBAaZYzZFVdiJwqF0bU4NO.jpg", "11"),
-        ("Remember Me", "Tyler è un ragazzo...", 2010, "https://...", "34812"),
-        ("Gli Stagisti", "Due quarantenni...", 2013, "https://...", "116741"),
-        ("Hachiko - Il tuo migliore amico", "Basato sulla...", 2009, "https://...", "2114")
-    ]
-
+        ("Il Padrino", "La famiglia criminale italo-americana dei Corleone attraversa dieci anni di intrighi, spargimenti di sangue e lotte per il potere.", 1972, "https://www.themoviedb.org/t/p/w600_and_h900_face/3bhkrj58Vtu7enYsRolD1fZdja1.jpg", "238"),
+        ("Se7en", "Due detective, un veterano e una giovane recluta, danno la caccia a un serial killer che sceglie le sue vittime in base ai sette peccati capitali.", 1995, "https://www.themoviedb.org/t/p/w600_and_h900_face/i5H7zusQGsysGQ8i6P361Vnr0n2.jpg", "807"),
+        ("Il Silenzio degli Innocenti", "Una giovane recluta dell'FBI deve chiedere l'aiuto di un serial killer cannibale in prigione per catturare un altro pericoloso assassino in libertà.", 1991, "https://www.themoviedb.org/t/p/w600_and_h900_face/7OFxU0bBO0HDL4klXmM1ahJPbv8.jpg", "274")
+        ]
     # Query di inserimento di massa (executemany cicla la lista in automatico)
     cursor.executemany("""
         INSERT INTO film (titolo, trama, anno, url_locandina, tmdb_id) 
