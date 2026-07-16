@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>CineManiaci - Le Mie Playlist</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #0f172a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .form-creazione {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 30px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+        }
+        input {
+            width: 60%;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2563eb;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-vedi {
+            background-color: #10b981;
+        }
+        .btn-vedi:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Le Mie Playlist Personali</h1>
+        
+        <div class="form-creazione">
+            <h3>Crea Nuova Playlist</h3>
+            <input type="text" id="nuovoTitolo" placeholder="Nome della playlist... (es. Preferiti)">
+            <button onclick="creaNuovaPlaylist()">Crea Playlist</button>
+        </div>
+
+        <h2>Lista Raccolte</h2>
+        <ul id="listaPlaylist">
+            </ul>
+    </div>
+
+    <script>
+        // Recuperiamo il token salvato nel portafoglio del browser (localStorage) (Fase 6)
+        const token = localStorage.getItem("session_token");
+
+        // Funzione bloccante: se l'utente non è loggato lo avvisiamo (Fase 5)
+        if (!token) {
+            alert("Devi effettuare il login per visualizzare le tue playlist!");
+            window.location.href = "login.html"; // Lo reindirizziamo alla pagina di login
+        }
+
+        // 1. Caricamento automatico all'avvio della pagina (Esercitazione 5)
+        async function caricaPlaylist() {
+            try {
+                const res = await fetch(`https://cautious-space-robot-p7j66g74q74gc94v5-8000.app.github.dev/playlist?token=${token}`);
+                
+                if (res.status === 401) {
+                    alert("Sessione scaduta, effettua nuovamente il login.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const playlist = await res.json();
+                const listaUl = document.getElementById("listaPlaylist");
+                listaUl.innerHTML = ""; // Puliamo la lista prima di popolarla
+
+                if (playlist.length === 0) {
+                    listaUl.innerHTML = "<li>Nessuna playlist creata. Creane una sopra!</li>";
+                    return;
+                }
+
+                // Cicliamo l'array e creiamo i tag visibili al volo (Esercitazione 5)
+                playlist.forEach(lista => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <strong>📂 ${lista.titolo_playlist}</strong>
+                        <button class="btn-vedi" onclick="vediDettaglio('${lista.titolo_playlist}')">Apri Contenuto</button>
+                    `;
+                    listaUl.appendChild(li);
+                });
+
+            } catch (err) {
+                console.error("Errore durante il caricamento:", err);
+            }
+        }
+
+        // 2. Creazione di una nuova playlist (Esercitazione 5)
+        async function creaNuovaPlaylist() {
+            const titoloInput = document.getElementById("nuovoTitolo");
+            const titolo = titoloInput.value.trim();
+
+            if (!titolo) {
+                alert("Inserisci un titolo valido!");
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://cautious-space-robot-p7j66g74q74gc94v5-8000.app.github.dev/playlist?token=${token}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        titolo_playlist: titolo
+                    })
+                });
+
+                if (res.ok) {
+                    alert("Playlist creata con successo!");
+                    titoloInput.value = ""; // Svuotiamo il campo
+                    caricaPlaylist(); // Ricarichiamo la lista aggiornata
+                } else {
+                    const errore = await res.json();
+                    alert("Errore: " + errore.detail);
+                }
+
+            } catch (err) {
+                console.error("Errore di rete:", err);
+            }
+        }
+
+        // 3. Funzione di visualizzazione dettaglio (alert temporaneo per ora)
+        function vediDettaglio(titolo) {
+            alert(`Stai aprendo la playlist: ${titolo}. Qui dentro potrai vedere l'elenco dei film salvati!`);
+        }
+
+        // Avviamo il caricamento automatico delle playlist non appena si apre la pagina
+        caricaPlaylist();
+    </script>
+</body>
+</html>

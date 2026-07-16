@@ -8,3 +8,6 @@ class ProdottoIn(BaseModel):
 class UtenteAuth(BaseModel):
     username: str
     password: str
+
+class PlaylistIn(BaseModel):
+        titolo_playlist: str

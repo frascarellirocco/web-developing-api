@@ -43,7 +43,7 @@
 
             if(!user || !pass) { alert("Compila entrambi i campi!"); return; }
 
-            let risposta = await fetch(`${API_URL}/register`, {
+            let risposta = await fetch("https://cautious-space-robot-p7j66g74q74gc94v5-8000.app.github.dev/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username: user, password: pass })
@@ -67,7 +67,7 @@
 
             if(!user || !pass) { alert("Inserisci le tue credenziali!"); return; }
 
-            let risposta = await fetch(`${API_URL}/login`, {
+            let risposta = await fetch("https://cautious-space-robot-p7j66g74q74gc94v5-8000.app.github.dev/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username: user, password: pass })
